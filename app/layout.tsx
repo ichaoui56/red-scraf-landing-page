@@ -15,7 +15,6 @@ const cairo = Cairo({
 export const metadata: Metadata = {
   title: "وشاح ميكاسا - Mikasa Scarf Morocco",
   description: "وشاح ميكاسا الأصلي من Attack on Titan. جودة عالية، توصيل سريع داخل المغرب. الدفع عند الاستلام.",
-  generator: "v0.app",
   icons: {
     icon: [
       {
