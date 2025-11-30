@@ -1,8 +1,24 @@
 import { NextResponse } from "next/server"
+import { Resend } from 'resend'
+
+interface OrderData {
+  actualQuantity: number
+  quantity: number
+  freeItems: number
+  fullName: string
+  phone: string
+  city: string
+  address: string
+  savings: number
+  pricePerItem: number
+  total: number
+}
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export async function POST(request: Request) {
   try {
-    const orderData = await request.json()
+    const orderData: OrderData = await request.json()
 
     // Create HTML email template
     const emailHtml = `
@@ -228,28 +244,34 @@ export async function POST(request: Request) {
       </html>
     `
 
-    // Send email using Resend API
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
-      },
-      body: JSON.stringify({
-        from: "طلبات وشاح ميكاسا <orders@yourdomain.com>",
-        to: "webvisionagency0@gmail.com",
-        subject: `🧣 طلب جديد - ${orderData.fullName} - ${orderData.actualQuantity} وشاح`,
-        html: emailHtml,
-      }),
+    // Send email using Resend
+    const { data, error } = await resend.emails.send({
+      from: 'Mikasa Scarf <onboarding@resend.dev>',
+      to: 'webvisionagency0@gmail.com',
+      subject: `🧣 طلب جديد - ${orderData.fullName} - ${orderData.actualQuantity} وشاح`,
+      html: emailHtml,
     })
 
-    if (!response.ok) {
-      throw new Error("Failed to send email")
+    if (error) {
+      console.error('Resend error:', error)
+      throw new Error('Failed to send email')
     }
 
-    return NextResponse.json({ success: true })
+    return NextResponse.json({ 
+      success: true,
+      message: 'تم إرسال الطلب بنجاح!',
+      data
+    })
+
   } catch (error) {
-    console.error("Error sending email:", error)
-    return NextResponse.json({ success: false, error: "Failed to send order email" }, { status: 500 })
+    console.error('Error processing order:', error)
+    return NextResponse.json(
+      { 
+        success: false, 
+        message: 'حدث خطأ أثناء معالجة الطلب',
+        error: error instanceof Error ? error.message : 'فشل في معالجة الطلب'
+      }, 
+      { status: 500 }
+    )
   }
 }
