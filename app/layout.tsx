@@ -42,7 +42,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={cairo.className}>
+      <body className={cairo.className + "relative min-h-screen bg-[#0a0a0a] text-white overflow-x-hidden"}>
         <ToastProvider>{children}</ToastProvider>
         <Analytics />
       </body>

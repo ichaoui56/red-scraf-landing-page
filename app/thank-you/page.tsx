@@ -180,7 +180,7 @@ export default function ThankYouPage() {
               </button>
             </Link>
             <button
-              onClick={() => (window.location.href = "https://wa.me/212602393795")}
+              onClick={() => (window.location.href = "https://wa.me/212602393795", "_blank")}
               className="flex-1 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white text-lg font-bold py-4 rounded-xl shadow-xl shadow-green-600/30 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
             >
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
