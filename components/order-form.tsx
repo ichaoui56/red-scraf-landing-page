@@ -1,15 +1,24 @@
 "use client"
 
 import type React from "react"
-
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { useToast } from "@/hooks/use-toast"
 
 export function OrderForm() {
+  const router = useRouter()
+  const { showToast } = useToast()
   const [quantity, setQuantity] = useState(1)
   const [formData, setFormData] = useState({
+    fullName: "",
+    phone: "",
+    city: "",
+    address: "",
+  })
+  const [errors, setErrors] = useState({
     fullName: "",
     phone: "",
     city: "",
@@ -23,10 +32,91 @@ export function OrderForm() {
   const total = pricePerItem * quantity + shippingCost
   const freeItems = actualQuantity - quantity
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = () => {
+    const newErrors = {
+      fullName: "",
+      phone: "",
+      city: "",
+      address: "",
+    }
+    let isValid = true
+
+    if (!formData.fullName.trim()) {
+      newErrors.fullName = "الاسم الكامل مطلوب"
+      isValid = false
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = "رقم الهاتف مطلوب"
+      isValid = false
+    } else if (!/^[0-9]{10}$/.test(formData.phone.replace(/\s/g, ""))) {
+      newErrors.phone = "رقم الهاتف غير صحيح (يجب أن يكون 10 أرقام)"
+      isValid = false
+    }
+
+    if (!formData.city.trim()) {
+      newErrors.city = "المدينة مطلوبة"
+      isValid = false
+    }
+
+    if (!formData.address.trim()) {
+      newErrors.address = "العنوان الكامل مطلوب"
+      isValid = false
+    }
+
+    setErrors(newErrors)
+    return isValid
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Order submitted:", { ...formData, quantity, actualQuantity, total })
-    alert(`شكرا على طلبك! سنتصل بك قريبا للتأكيد\n\nستحصل على ${actualQuantity} وشاح بسعر ${total}.00 MAD`)
+
+    if (!validateForm()) {
+      showToast("الرجاء ملء جميع الحقول بشكل صحيح", "error")
+      return
+    }
+
+    showToast("جاري إرسال طلبك...", "success")
+
+    try {
+      const orderData = {
+        ...formData,
+        quantity,
+        actualQuantity,
+        total,
+        pricePerItem,
+        savings,
+        freeItems,
+      }
+
+      const response = await fetch("/api/submit-order", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(orderData),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to submit order")
+      }
+
+      showToast("تم إرسال طلبك بنجاح! جاري التحويل...", "success")
+
+      setTimeout(() => {
+        router.push(`/thank-you?quantity=${quantity}&actualQuantity=${actualQuantity}&total=${total}`)
+      }, 1000)
+    } catch (error) {
+      console.error("Error submitting order:", error)
+      showToast("حدث خطأ أثناء إرسال الطلب. حاول مرة أخرى.", "error")
+    }
+  }
+
+  const handleInputChange = (field: keyof typeof formData, value: string) => {
+    setFormData({ ...formData, [field]: value })
+    if (errors[field]) {
+      setErrors({ ...errors, [field]: "" })
+    }
   }
 
   return (
@@ -179,8 +269,7 @@ export function OrderForm() {
           </div>
           <div className="flex items-center gap-3 bg-blue-900/20 border border-blue-500/40 rounded-xl p-4">
             <svg className="w-6 h-6 text-blue-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zM15 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0z" />
-              <path d="M3 4a1 1 0 00-1 1v10a1 1 0 001 1h1.05a2.5 2.5 0 014.9 0H10a1 1 0 001-1V5a1 1 0 00-1-1H3zM14 7a1 1 0 00-1 1v6.05A2.5 2.5 0 0115.95 16H17a1 1 0 001-1v-5a1 1 0 00-.293-.707l-2-2A1 1 0 0015 7h-1z" />
+              <path d="M8 16.5a1.5 1.5 0 11-3 0 1.5 1.5 0 013 0zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" />
             </svg>
             <span className="text-white">توصيل لجميع المدن</span>
           </div>
@@ -201,10 +290,11 @@ export function OrderForm() {
               id="fullName"
               required
               value={formData.fullName}
-              onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
-              className="bg-black/40 border-red-500/40 text-white text-lg h-12"
+              onChange={(e) => handleInputChange("fullName", e.target.value)}
+              className={`bg-black/40 border-red-500/40 text-white text-lg h-12 ${errors.fullName ? "border-red-600 border-2" : ""}`}
               placeholder="أدخل اسمك الكامل"
             />
+            {errors.fullName && <p className="text-red-400 text-sm">{errors.fullName}</p>}
           </div>
 
           <div className="space-y-2">
@@ -216,10 +306,11 @@ export function OrderForm() {
               required
               type="tel"
               value={formData.phone}
-              onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-              className="bg-black/40 border-red-500/40 text-white text-lg h-12"
+              onChange={(e) => handleInputChange("phone", e.target.value)}
+              className={`bg-black/40 border-red-500/40 text-white text-lg h-12 ${errors.phone ? "border-red-600 border-2" : ""}`}
               placeholder="06xxxxxxxx"
             />
+            {errors.phone && <p className="text-red-400 text-sm">{errors.phone}</p>}
           </div>
 
           <div className="space-y-2">
@@ -230,10 +321,11 @@ export function OrderForm() {
               id="city"
               required
               value={formData.city}
-              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-              className="bg-black/40 border-red-500/40 text-white text-lg h-12"
+              onChange={(e) => handleInputChange("city", e.target.value)}
+              className={`bg-black/40 border-red-500/40 text-white text-lg h-12 ${errors.city ? "border-red-600 border-2" : ""}`}
               placeholder="الدار البيضاء، الرباط، مراكش..."
             />
+            {errors.city && <p className="text-red-400 text-sm">{errors.city}</p>}
           </div>
 
           <div className="space-y-2">
@@ -244,10 +336,11 @@ export function OrderForm() {
               id="address"
               required
               value={formData.address}
-              onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-              className="bg-black/40 border-red-500/40 text-white text-lg h-12"
+              onChange={(e) => handleInputChange("address", e.target.value)}
+              className={`bg-black/40 border-red-500/40 text-white text-lg h-12 ${errors.address ? "border-red-600 border-2" : ""}`}
               placeholder="رقم، شارع، حي..."
             />
+            {errors.address && <p className="text-red-400 text-sm">{errors.address}</p>}
           </div>
 
           <Button

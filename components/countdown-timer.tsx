@@ -39,9 +39,12 @@ export function CountdownTimer() {
       const newTimeLeft = calculateTimeLeft()
       setTimeLeft(newTimeLeft)
 
-      // If time is up, clear the stored start time
       if (newTimeLeft.hours === 0 && newTimeLeft.minutes === 0 && newTimeLeft.seconds === 0) {
         localStorage.removeItem(startTimeKey)
+        // Reset start time to now for a new 5-hour countdown
+        const newStartTime = Date.now().toString()
+        localStorage.setItem(startTimeKey, newStartTime)
+        setTimeLeft({ hours: 5, minutes: 0, seconds: 0 })
       }
     }, 1000)
 

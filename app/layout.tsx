@@ -2,9 +2,10 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Cairo } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
+import { ToastProvider } from "@/hooks/use-toast"
 import "./globals.css"
 
-// <CHANGE> Loading Cairo font for Arabic text
+// Loading Cairo font for Arabic text
 const cairo = Cairo({
   subsets: ["arabic", "latin"],
   weight: ["400", "600", "700", "900"],
@@ -42,7 +43,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl">
       <body className={cairo.className}>
-        {children}
+        <ToastProvider>{children}</ToastProvider>
         <Analytics />
       </body>
     </html>

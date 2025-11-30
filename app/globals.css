@@ -168,6 +168,17 @@
     }
   }
 
+  @keyframes slide-in-right {
+    0% {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+
   .animate-scroll-right {
     animation: scroll-right 30s linear infinite;
   }
@@ -182,6 +193,10 @@
 
   .animate-float {
     animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-slide-in-right {
+    animation: slide-in-right 0.3s ease-out forwards;
   }
 
   .animation-delay-200 {
