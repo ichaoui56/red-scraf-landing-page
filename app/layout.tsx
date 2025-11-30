@@ -19,19 +19,33 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: "/icon-light-32x32.png",
+        url: "/icon-light-32x32.jpg",
         media: "(prefers-color-scheme: light)",
       },
+    ],
+  },
+  openGraph: {
+    title: "وشاح ميكاسا الأصلي - Mikasa Scarf Morocco",
+    description:
+      "وشاح ميكاسا الأصلي من Attack on Titan. اشتري 2 احصل على 3! جودة عالية، توصيل سريع، الدفع عند الاستلام.",
+    url: "https://mikasa-scarf.vercel.app",
+    siteName: "Mikasa Scarf Morocco",
+    images: [
       {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
+        url: "/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "وشاح ميكاسا الأصلي",
       },
     ],
-    apple: "/apple-icon.png",
+    locale: "ar_MA",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "وشاح ميكاسا الأصلي - Mikasa Scarf Morocco",
+    description: "وشاح ميكاسا الأصلي من Attack on Titan. اشتري 2 احصل على 3!",
+    images: ["/og-image.jpg"],
   },
 }
 
@@ -42,7 +56,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ar" dir="rtl">
-      <body className={cairo.className + "relative min-h-screen bg-[#0a0a0a] text-white overflow-x-hidden"}>
+      <body className={cairo.className}>
         <ToastProvider>{children}</ToastProvider>
         <Analytics />
       </body>
