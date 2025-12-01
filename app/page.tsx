@@ -383,28 +383,7 @@ export default function Home() {
                 {/* Countdown Timer */}
                 {mounted && <CountdownTimer />}
 
-                {/* Main CTA Text */}
-                <div className="bg-red-600/40 backdrop-blur-md border-2 border-red-400/50 rounded-2xl p-6 md:p-8 max-w-2xl mx-auto">
-                  <p className="text-2xl md:text-3xl font-bold text-white mb-4">عند طلبك اليوم ستحصل على</p>
-
-                  {/* Benefits List */}
-                  <div className="space-y-3 text-right">
-                    {["وشاح ميكاسا الأصلي", "هدية إضافية مجانية", "تغليف جاهز للإهداء", "توصيل سريع داخل المغرب"].map(
-                      (item, index) => (
-                        <div key={index} className="flex items-center gap-3 justify-end">
-                          <span className="text-lg md:text-xl text-white font-medium">{item}</span>
-                          <svg className="w-6 h-6 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                              fillRule="evenodd"
-                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </div>
-                      ),
-                    )}
-                  </div>
-                </div>
+             
               </div>
             </div>
 
@@ -430,62 +409,17 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Special Offer Section */}
-        <section className="container mx-auto px-4 py-16">
-          <div className="max-w-3xl mx-auto bg-gradient-to-br from-red-900/40 to-red-950/40 backdrop-blur-sm border-2 border-red-500/50 rounded-3xl p-8 md:p-12 shadow-2xl animate-fade-in">
-            <div className="text-center mb-8">
-              <div className="inline-block bg-yellow-500/20 border-2 border-yellow-400 rounded-full px-6 py-2 mb-4">
-                <p className="text-xl md:text-2xl font-bold text-yellow-300">🔥 عرض خاص: اشتري 2 واحصل على 1 مجانا!</p>
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-red-400 mb-2">عرض محدود</h2>
-              <p className="text-2xl md:text-3xl text-white font-semibold">عند طلبك اليوم ستصل على:</p>
-            </div>
-
-            <div className="space-y-4">
-              {[
-                "🎁 اشتري 2 واحصل على 1 مجانا",
-                "وشاح ميكاسا الأصلي",
-                "تغليف جاهز للهدية",
-                "توصيل سريع داخل المغرب",
-              ].map((item, index) => (
-                <div
-                  key={index}
-                  className={`flex items-center gap-4 rounded-xl p-4 hover:bg-black/50 transition-all duration-300 ${
-                    index === 0 ? "bg-green-600/30 border-2 border-green-500/50" : "bg-black/30"
-                  }`}
-                >
-                  <div
-                    className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                      index === 0 ? "bg-green-600" : "bg-red-600"
-                    }`}
-                  >
-                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path
-                        fillRule="evenodd"
-                        d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  </div>
-                  <span className={`text-xl ${index === 0 ? "text-green-200 font-bold" : "text-white"}`}>{item}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
         {/* Product Details Section */}
         <section className="container mx-auto px-4 py-16">
           <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-red-400">تفاصيل المنتج</h2>
 
           <ProductGallery />
 
-          <div className="max-w-3xl mx-auto mt-12 grid md:grid-cols-2 gap-6">
+          <div className="max-w-3xl mx-auto mt-12 grid grid-cols-2 md:grid-cols-2 gap-6">
             {[
-              "ثيم ديال Attack on Titan أصلية",
               "خامة دافية للشتاء",
               "جودة عالية ومتينة",
-              "تصميم أنمي أصلي",
+              "توصيل لجميع المدن",
               "مثالية للبرد والأناقة",
             ].map((feature, index) => (
               <div

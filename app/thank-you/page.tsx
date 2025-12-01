@@ -8,16 +8,14 @@ export default function ThankYouPage() {
   const searchParams = useSearchParams()
   const [orderDetails, setOrderDetails] = useState({
     quantity: 1,
-    actualQuantity: 1,
     total: 100,
   })
 
   useEffect(() => {
     const quantity = Number.parseInt(searchParams.get("quantity") || "1")
-    const actualQuantity = Number.parseInt(searchParams.get("actualQuantity") || "1")
     const total = Number.parseInt(searchParams.get("total") || "100")
 
-    setOrderDetails({ quantity, actualQuantity, total })
+    setOrderDetails({ quantity, total })
   }, [searchParams])
 
   return (
@@ -83,30 +81,17 @@ export default function ThankYouPage() {
             <p className="text-lg text-gray-300 leading-relaxed">سنتصل بك خلال 24 ساعة للتأكيد</p>
           </div>
 
-          {/* Order Summary */}
           <div className="bg-black/60 rounded-2xl p-6 md:p-8 border-2 border-yellow-500/40 mb-8">
             <h2 className="text-2xl font-bold text-yellow-300 mb-6 text-center">ملخص الطلب</h2>
 
             <div className="space-y-4">
-              <div className="flex justify-between items-center text-lg">
-                <span className="text-gray-300">الكمية المدفوعة:</span>
-                <span className="text-white font-bold">{orderDetails.quantity} وشاح</span>
-              </div>
-
-              <div className="flex justify-between items-center text-xl bg-green-600/20 px-4 py-3 rounded-lg border border-green-500/40">
-                <span className="text-green-300 font-bold">الكمية المستلمة:</span>
+              <div className="flex justify-between items-center text-xl">
+                <span className="text-gray-300">الكمية:</span>
                 <div className="flex items-center gap-2">
-                  <span className="text-green-300 font-bold text-2xl">{orderDetails.actualQuantity} وشاح</span>
-                  <span className="text-2xl">🎁</span>
+                  <span className="text-white font-bold text-2xl">{orderDetails.quantity} وشاح</span>
+                  <span className="text-2xl">🧣</span>
                 </div>
               </div>
-
-              {orderDetails.actualQuantity > orderDetails.quantity && (
-                <div className="flex justify-between items-center text-lg text-green-400">
-                  <span className="font-semibold">هدية مجانية:</span>
-                  <span className="font-bold">+{orderDetails.actualQuantity - orderDetails.quantity} وشاح 🎉</span>
-                </div>
-              )}
 
               <div className="border-t border-red-500/30 pt-4 flex justify-between items-center text-2xl">
                 <span className="text-white font-bold">المجموع:</span>
@@ -180,7 +165,7 @@ export default function ThankYouPage() {
               </button>
             </Link>
             <button
-              onClick={() => (window.location.href = "https://wa.me/212602393795", "_blank")}
+              onClick={() => (window.location.href = "https://wa.me/212XXXXXXXXX")}
               className="flex-1 bg-gradient-to-r from-green-600 to-emerald-700 hover:from-green-700 hover:to-emerald-800 text-white text-lg font-bold py-4 rounded-xl shadow-xl shadow-green-600/30 transition-all duration-300 hover:scale-105 flex items-center justify-center gap-2"
             >
               <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">

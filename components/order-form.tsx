@@ -27,10 +27,7 @@ export function OrderForm() {
 
   const pricePerItem = 100
   const shippingCost = 0
-  const actualQuantity = quantity >= 2 ? Math.floor(quantity / 2) * 3 + (quantity % 2) : quantity
-  const savings = quantity >= 2 ? Math.floor(quantity / 2) * pricePerItem : 0
   const total = pricePerItem * quantity + shippingCost
-  const freeItems = actualQuantity - quantity
 
   const validateForm = () => {
     const newErrors = {
@@ -82,11 +79,8 @@ export function OrderForm() {
       const orderData = {
         ...formData,
         quantity,
-        actualQuantity,
         total,
         pricePerItem,
-        savings,
-        freeItems,
       }
 
       const response = await fetch("/api/submit-order", {
@@ -104,7 +98,7 @@ export function OrderForm() {
       showToast("تم إرسال طلبك بنجاح! جاري التحويل...", "success")
 
       setTimeout(() => {
-        router.push(`/thank-you?quantity=${quantity}&actualQuantity=${actualQuantity}&total=${total}`)
+        router.push(`/thank-you?quantity=${quantity}&total=${total}`)
       }, 1000)
     } catch (error) {
       console.error("Error submitting order:", error)
@@ -128,18 +122,13 @@ export function OrderForm() {
           <Label htmlFor="quantity" className="text-white text-lg">
             الكمية
           </Label>
-          <div className="bg-gradient-to-r from-yellow-600/30 to-orange-600/30 border-2 border-yellow-500/50 rounded-xl p-3 mb-3">
-            <p className="text-center text-base sm:text-lg md:text-xl font-bold text-yellow-300">
-              🎁 عرض خاص: اشتري 2 واحصل على 1 مجانا!
-            </p>
-          </div>
           <div className="flex items-center gap-4">
             <Button
               type="button"
               variant="outline"
               size="lg"
               onClick={() => setQuantity(Math.max(1, quantity - 1))}
-              className="bg-black/40 border-red-500/40 text-white hover:bg-red-900/40 text-2xl w-12 h-12"
+              className="bg-black/60 border-red-500/40 text-white hover:bg-red-900/40 text-2xl w-12 h-12"
             >
               -
             </Button>
@@ -150,105 +139,34 @@ export function OrderForm() {
               max="10"
               value={quantity}
               onChange={(e) => setQuantity(Math.max(1, Math.min(10, Number.parseInt(e.target.value) || 1)))}
-              className="bg-black/40 border-red-500/40 text-white text-center text-2xl font-bold h-12"
+              className="bg-black/60 border-red-500/40 text-white text-center text-2xl font-bold h-12"
             />
             <Button
               type="button"
               variant="outline"
               size="lg"
               onClick={() => setQuantity(Math.min(10, quantity + 1))}
-              className="bg-black/40 border-red-500/40 text-white hover:bg-red-900/40 text-2xl w-12 h-12"
+              className="bg-black/60 border-red-500/40 text-white hover:bg-red-900/40 text-2xl w-12 h-12"
             >
               +
             </Button>
           </div>
-
-          <div className="bg-black/60 rounded-xl p-5 mt-4 border-2 border-yellow-500/30">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="text-center">
-                <p className="text-gray-400 text-sm mb-2">تدفع مقابل:</p>
-                <div className="flex flex-wrap justify-center gap-2 mb-2">
-                  {Array.from({ length: quantity }).map((_, i) => (
-                    <span key={i} className="text-4xl">
-                      🧣
-                    </span>
-                  ))}
-                </div>
-                <p className="text-red-400 text-2xl font-bold">{quantity} وشاح</p>
-                <p className="text-gray-300 text-lg">{total}.00 MAD</p>
-              </div>
-
-              <div className="text-center border-l-2 border-yellow-500/30">
-                <p className="text-gray-400 text-sm mb-2">تحصل على:</p>
-                <div className="flex flex-wrap justify-center gap-2 mb-2">
-                  {Array.from({ length: actualQuantity }).map((_, i) => (
-                    <span key={i} className={`text-4xl ${i >= quantity ? "animate-bounce" : ""}`}>
-                      🧣{i >= quantity && "🎁"}
-                    </span>
-                  ))}
-                </div>
-                <p className="text-green-400 text-2xl font-bold">{actualQuantity} وشاح!</p>
-                {freeItems > 0 && <p className="text-yellow-300 text-lg font-semibold">+ {freeItems} مجاني 🎉</p>}
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row gap-2 mt-3">
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setQuantity(2)}
-              className="flex-1 bg-green-600/20 border-green-500/40 text-green-300 hover:bg-green-600/30 font-bold text-xs sm:text-sm md:text-base py-3 sm:py-2 px-2"
-            >
-              <span className="text-center">ادفع 2 = احصل على 3 🎁</span>
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={() => setQuantity(4)}
-              className="flex-1 bg-green-600/20 border-green-500/40 text-green-300 hover:bg-green-600/30 font-bold text-xs sm:text-sm md:text-base py-3 sm:py-2 px-2"
-            >
-              <span className="text-center">ادفع 4 = احصل على 6 🎁</span>
-            </Button>
-          </div>
         </div>
 
-        {quantity >= 2 && (
-          <div className="bg-gradient-to-r from-green-600/30 to-emerald-600/30 border-2 border-green-500/50 rounded-xl p-6 mb-6 text-center">
-            <p className="text-2xl font-bold text-green-300 mb-1">🎉 مبروك! وفرت {savings}.00 MAD</p>
-            <p className="text-lg text-white">
-              ستستلم <span className="text-yellow-300 font-bold text-2xl">{actualQuantity} وشاح</span> بثمن{" "}
-              <span className="text-red-400 font-bold">{quantity} فقط</span>
-            </p>
-          </div>
-        )}
-
         {/* Pricing Breakdown */}
-        <div className="bg-black/40 rounded-2xl p-6 mb-8 space-y-4">
+        <div className="bg-black/60 rounded-2xl p-6 mb-8 space-y-4">
           <div className="flex justify-between items-center text-xl">
             <span className="text-gray-300">الثمن (وحدة واحدة):</span>
             <span className="text-white font-bold">{pricePerItem}.00 MAD</span>
           </div>
           <div className="flex justify-between items-center text-xl">
-            <span className="text-gray-300">الكمية المدفوعة:</span>
+            <span className="text-gray-300">الكمية:</span>
             <span className="text-white font-bold">{quantity}</span>
-          </div>
-          <div className="flex justify-between items-center text-2xl bg-green-600/20 -mx-2 px-2 py-3 rounded-lg border-2 border-green-500/40">
-            <span className="text-green-300 font-bold">الكمية المستلمة:</span>
-            <span className="text-green-300 font-bold text-3xl">{actualQuantity} وشاح 🎁</span>
           </div>
           <div className="flex justify-between items-center text-xl">
             <span className="text-gray-300">التوصيل:</span>
             <span className="text-green-400 font-bold">مجاني</span>
           </div>
-          {savings > 0 && (
-            <div className="flex justify-between items-center text-xl text-green-400">
-              <span className="font-semibold">التوفير:</span>
-              <span className="font-bold">- {savings}.00 MAD</span>
-            </div>
-          )}
           <div className="border-t border-red-500/30 pt-4 flex justify-between items-center text-2xl">
             <span className="text-white font-bold">المجموع:</span>
             <span className="text-red-400 font-bold">{total}.00 MAD</span>
@@ -275,10 +193,6 @@ export function OrderForm() {
           </div>
         </div>
 
-        {/* Free Gift Banner */}
-        <div className="bg-gradient-to-r from-yellow-600/30 to-orange-600/30 border-2 border-yellow-500/50 rounded-xl p-4 mb-8 text-center">
-          <p className="text-xl font-bold text-yellow-300">🎁 عرض الهدية: اطلب الآن واحصل على مدية إضافية مجانية</p>
-        </div>
 
         {/* Order Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -291,7 +205,7 @@ export function OrderForm() {
               required
               value={formData.fullName}
               onChange={(e) => handleInputChange("fullName", e.target.value)}
-              className={`bg-black/40 border-red-500/40 text-white text-lg h-12 ${errors.fullName ? "border-red-600 border-2" : ""}`}
+              className={`bg-black/60 border-red-500/40 text-white text-lg h-12 ${errors.fullName ? "border-red-600 border-2" : ""}`}
               placeholder="أدخل اسمك الكامل"
             />
             {errors.fullName && <p className="text-red-400 text-sm">{errors.fullName}</p>}
@@ -307,7 +221,7 @@ export function OrderForm() {
               type="tel"
               value={formData.phone}
               onChange={(e) => handleInputChange("phone", e.target.value)}
-              className={`bg-black/40 border-red-500/40 text-white text-lg h-12 ${errors.phone ? "border-red-600 border-2" : ""}`}
+              className={`bg-black/60 border-red-500/40 text-white text-lg h-12 ${errors.phone ? "border-red-600 border-2" : ""}`}
               placeholder="06xxxxxxxx"
             />
             {errors.phone && <p className="text-red-400 text-sm">{errors.phone}</p>}
@@ -322,7 +236,7 @@ export function OrderForm() {
               required
               value={formData.city}
               onChange={(e) => handleInputChange("city", e.target.value)}
-              className={`bg-black/40 border-red-500/40 text-white text-lg h-12 ${errors.city ? "border-red-600 border-2" : ""}`}
+              className={`bg-black/60 border-red-500/40 text-white text-lg h-12 ${errors.city ? "border-red-600 border-2" : ""}`}
               placeholder="الدار البيضاء، الرباط، مراكش..."
             />
             {errors.city && <p className="text-red-400 text-sm">{errors.city}</p>}
@@ -337,7 +251,7 @@ export function OrderForm() {
               required
               value={formData.address}
               onChange={(e) => handleInputChange("address", e.target.value)}
-              className={`bg-black/40 border-red-500/40 text-white text-lg h-12 ${errors.address ? "border-red-600 border-2" : ""}`}
+              className={`bg-black/60 border-red-500/40 text-white text-lg h-12 ${errors.address ? "border-red-600 border-2" : ""}`}
               placeholder="رقم، شارع، حي..."
             />
             {errors.address && <p className="text-red-400 text-sm">{errors.address}</p>}
@@ -349,7 +263,7 @@ export function OrderForm() {
             className="w-full bg-red-600 hover:bg-red-700 text-white text-base sm:text-xl md:text-2xl py-6 sm:py-7 md:py-8 rounded-xl shadow-2xl shadow-red-600/50 hover:shadow-red-600/70 transition-all duration-300 hover:scale-105"
           >
             <span className="block text-center leading-tight">
-              أكد الطلب - استلم {actualQuantity} وشاح ({total}.00 MAD)
+              أكد الطلب - {quantity} وشاح ({total}.00 MAD)
             </span>
           </Button>
         </form>
