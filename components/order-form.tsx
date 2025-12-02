@@ -8,6 +8,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useToast } from "@/hooks/use-toast"
 
+const calculatePrice = (quantity: number) => {
+  const pairs = Math.floor(quantity / 2)
+  const singles = quantity % 2
+  return pairs * 180 + singles * 99
+}
+
 export function OrderForm() {
   const router = useRouter()
   const { showToast } = useToast()
@@ -25,9 +31,9 @@ export function OrderForm() {
     address: "",
   })
 
-  const pricePerItem = 100
   const shippingCost = 0
-  const total = pricePerItem * quantity + shippingCost
+  const subtotal = calculatePrice(quantity)
+  const total = subtotal + shippingCost
 
   const validateForm = () => {
     const newErrors = {
@@ -80,7 +86,7 @@ export function OrderForm() {
         ...formData,
         quantity,
         total,
-        pricePerItem,
+        subtotal,
       }
 
       const response = await fetch("/api/submit-order", {
@@ -153,27 +159,23 @@ export function OrderForm() {
           </div>
         </div>
 
-        {/* Pricing Breakdown */}
-        <div className="bg-black/60 rounded-2xl p-6 mb-8 space-y-4">
-          <div className="flex justify-between items-center text-xl">
-            <span className="text-gray-300">الثمن (وحدة واحدة):</span>
-            <span className="text-white font-bold">{pricePerItem}.00 MAD</span>
-          </div>
+        <div className="bg-black/60 rounded-2xl p-6 mb-6 space-y-4">
           <div className="flex justify-between items-center text-xl">
             <span className="text-gray-300">الكمية:</span>
-            <span className="text-white font-bold">{quantity}</span>
+            <span className="text-white font-bold">{quantity} وشاح</span>
           </div>
+
           <div className="flex justify-between items-center text-xl">
             <span className="text-gray-300">التوصيل:</span>
             <span className="text-green-400 font-bold">مجاني</span>
           </div>
+
           <div className="border-t border-red-500/30 pt-4 flex justify-between items-center text-2xl">
             <span className="text-white font-bold">المجموع:</span>
-            <span className="text-red-400 font-bold">{total}.00 MAD</span>
+            <span className="text-red-400 font-bold">{total}.00 درهم</span>
           </div>
         </div>
 
-        {/* Trust Badges */}
         <div className="grid md:grid-cols-2 gap-4 mb-8">
           <div className="flex items-center gap-3 bg-green-900/20 border border-green-500/40 rounded-xl p-4">
             <svg className="w-6 h-6 text-green-400 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -193,8 +195,6 @@ export function OrderForm() {
           </div>
         </div>
 
-
-        {/* Order Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="fullName" className="text-white text-lg">
@@ -263,7 +263,7 @@ export function OrderForm() {
             className="w-full bg-red-600 hover:bg-red-700 text-white text-base sm:text-xl md:text-2xl py-6 sm:py-7 md:py-8 rounded-xl shadow-2xl shadow-red-600/50 hover:shadow-red-600/70 transition-all duration-300 hover:scale-105"
           >
             <span className="block text-center leading-tight">
-              أكد الطلب - {quantity} وشاح ({total}.00 MAD)
+              أكد الطلب - {quantity} وشاح ({total}.00 درهم)
             </span>
           </Button>
         </form>

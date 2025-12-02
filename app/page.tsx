@@ -191,8 +191,11 @@ export default function Home() {
       </div>
 
       {/* Top Scrolling Banner */}
-      <ScrollingBanner text="عرض خاص: اشتري 2 احصل على 1 مجانا" direction="right" className="bg-white text-black" />
-
+      <ScrollingBanner
+        text="عرض خاص: وشاح واحد ب 99 درهم فقط | اشتري 2 ب 180 درهم"
+        direction="right"
+        className="bg-white text-black"
+      />
       <div className="relative z-10">
         {/* Hero Section */}
         <section className="relative py-8 md:py-12">
@@ -383,7 +386,7 @@ export default function Home() {
                 {/* Countdown Timer */}
                 {mounted && <CountdownTimer />}
 
-             
+
               </div>
             </div>
 
