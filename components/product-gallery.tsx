@@ -23,12 +23,12 @@ export function ProductGallery() {
   return (
     <div className="max-w-4xl mx-auto">
       {/* Main Image */}
-      <div className="relative mb-6 rounded-3xl overflow-hidden shadow-2xl">
+      <div className="relative h-full mb-6 rounded-3xl overflow-hidden shadow-2xl">
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10" />
         <img
           src={images[selectedImage].url || "/placeholder.svg"}
           alt={images[selectedImage].alt}
-          className="w-full h-[400px] md:h-[600px] object-cover"
+          className="w-full h-full object-cover"
         />
       </div>
 
@@ -45,7 +45,7 @@ export function ProductGallery() {
                 : "ring-2 ring-white/20 hover:ring-red-400",
             )}
           >
-            <img src={image.url || "/placeholder.svg"} alt={image.alt} className="w-full h-32 md:h-48 object-cover" />
+            <img src={image.url || "/placeholder.svg"} alt={image.alt} className="w-full h-full object-cover" />
           </button>
         ))}
       </div>

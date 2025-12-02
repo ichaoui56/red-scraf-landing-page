@@ -210,7 +210,7 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify({
         from: "Mikasa Scarf <onboarding@resend.dev>",
-        to: "webvisionagency0@gmail.com",
+        to: "mikasa.akerman.scarf@gmail.com",
         subject: `🧣 طلب جديد - ${orderData.fullName} - ${orderData.quantity} وشاح`,
         html: emailHtml,
       }),
